@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Contact - CGV Divine Foods</title>
     <style>
         /* General Styling */
@@ -112,6 +112,29 @@
             margin-top: 145px;
             width: fit-content; /* Adjust width according to content */
             min-width: 150px; /* Set a minimum width */
+        }
+        @media only screen and (max-width: 768px) {
+            .welcome-quote {
+                font-size: 18px;
+                padding: 0 15px;
+            }
+
+            .small-image {
+                max-width: 180px;
+            }
+
+            .button-container {
+                top: 5px;
+                right: 5px;
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .menu-button, .contact-link {
+                width: 120px;
+                padding: 8px;
+                font-size: 14px;
+            }
         }
     </style>
 </head>

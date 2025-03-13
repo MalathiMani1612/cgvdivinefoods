@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>CGV Divine Foods - Menu</title>
     <style>
         body {
@@ -151,6 +151,29 @@
             position:fixed;
             top: 130px;
             right: 370px;
+        }
+        @media only screen and (max-width: 768px) {
+            .welcome-quote {
+                font-size: 18px;
+                padding: 0 15px;
+            }
+
+            .small-image {
+                max-width: 180px;
+            }
+
+            .button-container {
+                top: 5px;
+                right: 5px;
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .menu-button, .contact-link {
+                width: 120px;
+                padding: 8px;
+                font-size: 14px;
+            }
         }
     </style>
     <script>
