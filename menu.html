@@ -60,6 +60,7 @@
             transform: scale(1.1);
             border-radius: 10px;
         }
+
         .menu-items {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
@@ -91,19 +92,21 @@
             font-family: Arial, sans-serif;
             font-weight: bold;
             letter-spacing: 2px;
-            text-shadow: 2px 2px 4px #fdd835;;
+            text-shadow: 2px 2px 4px #fdd835;
         }
         .menu-column:hover {
             transform: scale(1.1);
             box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
             border-radius: 10px;
         }
+
         html {
             scroll-behavior: smooth;
         }
+
         .popup-overlay {
             display: none;
-            position:fixed;
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
@@ -113,6 +116,7 @@
             justify-content: center;
             align-items: center;
         }
+
         .popup-content {
             background-color: #f8f5f0;
             color: #3e2723;
@@ -122,11 +126,12 @@
             width: 400px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
         }
+
         .popup-content h3 {
             margin: 0 0 20px;
             font-size: 1.5rem;
             color: #3e2723;
-            text-shadow: 2px 2px 4px #fdd835;;
+            text-shadow: 2px 2px 4px #fdd835;
         }
 
         .popup-content ul {
@@ -135,9 +140,11 @@
             margin: 0;
             gap: 10px;
         }
+
         .popup-content ul.multi-column {
             grid-template-columns: repeat(2, 1fr);
         }
+
         .popup-content li {
             margin: 10px 0;
             font-size: 1.2rem;
@@ -148,106 +155,35 @@
             font-size: 3rem;
             cursor: pointer;
             color: #fdd835;
-            position:fixed;
+            position: fixed;
             top: 130px;
             right: 370px;
         }
+
         @media only screen and (max-width: 768px) {
-            .welcome-quote {
+            .menu-items {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+            .category-image {
+                width: 150px;
+                height: 130px;
+            }
+            .menu-section h2 {
                 font-size: 18px;
-                padding: 0 15px;
-            }
-
-            .small-image {
-                max-width: 180px;
-            }
-
-            .button-container {
-                top: 5px;
-                right: 5px;
-                flex-direction: column;
-                gap: 5px;
-            }
-
-            .menu-button, .contact-link {
-                width: 120px;
                 padding: 8px;
-                font-size: 14px;
+            }
+            .popup-content {
+                width: 90%;
+                padding: 15px;
+            }
+            .close-button {
+                top: 10px;
+                right: 10px;
+                font-size: 2rem;
             }
         }
     </style>
-    <script>
-        function searchMenu(event) {
-            const query = event.target.value.toLowerCase();
-            const categories = document.querySelectorAll('.menu-column p'); // Select category names (e.g., "Soups")
-            const suggestionBox = document.getElementById('suggestion-box');
-            
-            suggestionBox.innerHTML = ''; // Clear previous suggestions
-            suggestionBox.style.display = 'none';
-            
-            // Reset visibility if search query is empty
-            if (query.trim() === '') {
-                categories.forEach(category => category.parentElement.style.display = 'block'); // Show all categories
-                return;
-            }
-
-            let suggestions = [];
-
-            // Search for matching category names
-            categories.forEach(category => {
-                const categoryText = category.textContent.toLowerCase();
-                const parentColumn = category.parentElement; // Get the parent menu-column div
-                
-                if (categoryText.includes(query)) {
-                    parentColumn.style.display = 'block'; // Show matching categories
-                    suggestions.push(categoryText);
-                } else {
-                    parentColumn.style.display = 'none'; // Hide non-matching categories
-                }
-            });
-
-            // Populate the suggestion box
-            if (suggestions.length > 0) {
-                suggestionBox.style.display = 'block';
-                const uniqueSuggestions = [...new Set(suggestions)]; // Avoid duplicate suggestions
-                uniqueSuggestions.forEach(suggestion => {
-                    const suggestionItem = document.createElement('li');
-                    suggestionItem.textContent = suggestion;
-                    suggestionItem.style.padding = '5px';
-                    suggestionItem.style.cursor = 'pointer';
-
-                    // Clicking a suggestion scrolls to the matching section
-                    suggestionItem.onclick = () => {
-                        const matchingCategory = Array.from(categories).find(
-                            category => category.textContent.toLowerCase() === suggestion
-                        );
-                        if (matchingCategory) {
-                            matchingCategory.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        }
-                        event.target.value = suggestion; // Auto-fill search bar with selected suggestion
-                        suggestionBox.innerHTML = '';
-                        suggestionBox.style.display = 'none';
-                    };
-
-                    suggestionBox.appendChild(suggestionItem);
-                });
-            }
-        }
-        function togglePopup(popupId) {
-            const popup = document.getElementById(popupId);
-            popup.style.display = popup.style.display === "flex" ? "none" : "flex";
-
-            // Adjust layout dynamically
-            const popupList = popup.querySelector("ul");
-            const itemCount = popupList.children.length;
-
-            if (itemCount > 6) {
-                popupList.classList.add("multi-column"); // Two-column layout
-            } else {
-                popupList.classList.remove("multi-column"); // Single column
-            }
-        }
-    </script>
 </head>
 <body>
     <!-- ---------------------------------------------HTML----------------------------------------- -->

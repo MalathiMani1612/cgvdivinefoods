@@ -114,26 +114,55 @@
             min-width: 150px; /* Set a minimum width */
         }
         @media only screen and (max-width: 768px) {
+            body {
+                display: block; /* Allows proper scrolling */
+                height: auto; /* Avoids forced full-screen height */
+                padding: 10px;
+            }
+
+            .container {
+                width: 95%;
+                max-width: 400px;
+                padding: 10px;
+                border-radius: 30px; /* Less rounded corners for better fit */
+            }
+
             .welcome-quote {
                 font-size: 18px;
-                padding: 0 15px;
+                padding: 0 10px;
             }
 
             .small-image {
-                max-width: 180px;
+                max-width: 150px;
+                height: auto;
             }
 
             .button-container {
-                top: 5px;
-                right: 5px;
-                flex-direction: column;
-                gap: 5px;
+                position: static;
+                display: flex;
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 10px;
             }
 
             .menu-button, .contact-link {
-                width: 120px;
-                padding: 8px;
+                width: 45%;
+                padding: 10px;
                 font-size: 14px;
+            }
+
+            form input, form textarea, button {
+                width: 100%; /* Ensures full width on small screens */
+                font-size: 14px;
+                padding: 10px;
+            }
+
+            .popup {
+                width: 80%;
+                min-width: 180px;
+                padding: 10px;
+                font-size: 14px;
+                margin-top: 50px; /* Adjusted to avoid overlap */
             }
         }
     </style>
