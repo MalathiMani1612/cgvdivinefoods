@@ -1,0 +1,1283 @@
+<<<<<<< HEAD
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CGV Divine Foods - Menu</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f5f0;
+            background-image: url('background-menu.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            color: #3e2723;
+        }
+
+        header {
+            background-color: #3e2723;
+            color: #fdd835;
+            text-align: left;
+            padding: 10px;
+            position: relative;
+        }
+
+        .search-bar {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .search-bar input {
+            padding: 5px;
+            border: 2px solid #fdd835;
+            border-radius: 5px;
+        }
+
+        h1, h2 {
+            margin: 10px 0;
+        }
+
+        .menu-section {
+            padding: 10px;
+            border-bottom: 1px solid #fdd835;
+        }
+
+        .menu-section h2 {
+            text-align: center;
+            color: #3e2723;
+            background-color: #fdd835;
+            padding: 10px;
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.4);
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .menu-section h2:hover {
+            transform: scale(1.1);
+            border-radius: 10px;
+        }
+        .menu-items {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+            justify-items: center;
+        }
+
+        .category-image {
+            width: 200px;
+            height: 180px;
+            object-fit: cover;
+            border: 2px solid #fdd835;
+            border-radius: 10px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background-color: #3e2723;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .category-image:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .menu-column p {
+            text-align: center;
+            font-size: 1rem;
+            margin-top: 10px;
+            color: #3e2723;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px #fdd835;;
+        }
+        .menu-column:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        .popup-overlay {
+            display: none;
+            position:fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .popup-content {
+            background-color: #f8f5f0;
+            color: #3e2723;
+            padding: 20px;
+            border-radius: 20px;
+            text-align: justify;
+            width: 400px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        .popup-content h3 {
+            margin: 0 0 20px;
+            font-size: 1.5rem;
+            color: #3e2723;
+            text-shadow: 2px 2px 4px #fdd835;;
+        }
+
+        .popup-content ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            gap: 10px;
+        }
+        .popup-content ul.multi-column {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .popup-content li {
+            margin: 10px 0;
+            font-size: 1.2rem;
+            color: #3e2723;
+        }
+
+        .close-button {
+            font-size: 3rem;
+            cursor: pointer;
+            color: #fdd835;
+            position:fixed;
+            top: 130px;
+            right: 370px;
+        }
+    </style>
+    <script>
+        function searchMenu(event) {
+            const query = event.target.value.toLowerCase();
+            const categories = document.querySelectorAll('.menu-column p'); // Select category names (e.g., "Soups")
+            const suggestionBox = document.getElementById('suggestion-box');
+            
+            suggestionBox.innerHTML = ''; // Clear previous suggestions
+            suggestionBox.style.display = 'none';
+            
+            // Reset visibility if search query is empty
+            if (query.trim() === '') {
+                categories.forEach(category => category.parentElement.style.display = 'block'); // Show all categories
+                return;
+            }
+
+            let suggestions = [];
+
+            // Search for matching category names
+            categories.forEach(category => {
+                const categoryText = category.textContent.toLowerCase();
+                const parentColumn = category.parentElement; // Get the parent menu-column div
+                
+                if (categoryText.includes(query)) {
+                    parentColumn.style.display = 'block'; // Show matching categories
+                    suggestions.push(categoryText);
+                } else {
+                    parentColumn.style.display = 'none'; // Hide non-matching categories
+                }
+            });
+
+            // Populate the suggestion box
+            if (suggestions.length > 0) {
+                suggestionBox.style.display = 'block';
+                const uniqueSuggestions = [...new Set(suggestions)]; // Avoid duplicate suggestions
+                uniqueSuggestions.forEach(suggestion => {
+                    const suggestionItem = document.createElement('li');
+                    suggestionItem.textContent = suggestion;
+                    suggestionItem.style.padding = '5px';
+                    suggestionItem.style.cursor = 'pointer';
+
+                    // Clicking a suggestion scrolls to the matching section
+                    suggestionItem.onclick = () => {
+                        const matchingCategory = Array.from(categories).find(
+                            category => category.textContent.toLowerCase() === suggestion
+                        );
+                        if (matchingCategory) {
+                            matchingCategory.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                        event.target.value = suggestion; // Auto-fill search bar with selected suggestion
+                        suggestionBox.innerHTML = '';
+                        suggestionBox.style.display = 'none';
+                    };
+
+                    suggestionBox.appendChild(suggestionItem);
+                });
+            }
+        }
+        function togglePopup(popupId) {
+            const popup = document.getElementById(popupId);
+            popup.style.display = popup.style.display === "flex" ? "none" : "flex";
+
+            // Adjust layout dynamically
+            const popupList = popup.querySelector("ul");
+            const itemCount = popupList.children.length;
+
+            if (itemCount > 6) {
+                popupList.classList.add("multi-column"); // Two-column layout
+            } else {
+                popupList.classList.remove("multi-column"); // Single column
+            }
+        }
+    </script>
+</head>
+<body>
+    <!-- ---------------------------------------------HTML----------------------------------------- -->
+    <header>
+        <h1>&nbsp;&nbsp;&nbsp;CGV Divine Foods</h1>
+        <div class="search-bar">
+            <input type="text" id="search-input" placeholder="Search menu..." oninput="searchMenu(event)">
+            <ul id="suggestion-box" style="list-style: none; padding: 0; margin: 5px 0 0; background: #fdd835; color: #3e2723; border-radius: 5px; max-height: 150px; overflow-y: auto; display: none;"></ul>
+        </div>
+    </header>
+    
+    <div class="menu-section">
+        <h2>Categories</h2>
+        <div class="menu-items">
+            <!-- Soups Category -->
+            <div class="menu-column">
+                <a href="javascript:void(0)" onclick="togglePopup('soup-popup')">
+                    <img src="images/soup.png" alt="Soups" class="category-image">
+                </a>
+                <p>Soups</p>
+            </div>
+            
+            <div id="soup-popup" class="popup-overlay">
+                <div class="popup-content">
+                    <span class="close-button" onclick="togglePopup('soup-popup')">&times;</span>
+                    <h3>Soups</h3>
+                    <ul>
+                        <li> Broccoli Soup | ₹69/- </li>
+                        <li> Mushroom Soup | ₹59/- </li>
+                        <li> Basil Tomato Soup | ₹39/-</li>
+                        <li> Manchow Soup | ₹59/- </li>
+                        <li> Creamy Chicken Soup | ₹69/- </li>
+                        <li> Egg Drop Soup | ₹59/- </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- Salads Category -->
+            <div class="menu-column">
+                <a href="javascript:void(0)" onclick="togglePopup('salad-popup')">
+                    <img src="images/salad.png" alt="Salads" class="category-image">
+                </a>
+                <p>Salads</p>
+            </div>
+
+            <div id="salad-popup" class="popup-overlay">
+                <div class="popup-content">
+                    <span class="close-button" onclick="togglePopup('salad-popup')">&times;</span>
+                    <h3>Salads</h3>
+                    <ul>
+                        <li>Fruit Salad with Ice Cream | ₹79</li>
+                        <li>Beet and Apple Salad | ₹89</li>
+                        <li>Watermelon Green Peas & Lemon Leaf | ₹79/-</li>
+                        <li>Before Gym Salad | ₹69/-</li>
+                        <li>Sweet Honey Coleslaw | ₹79/-</li>
+                        <li>Cucumber Melon Feta Salad | ₹89/-</li>
+                    </ul>
+                </div>
+            </div>
+            <!-- Starters Category -->
+            <div class="menu-column">
+                <a href="javascript:void(0)" onclick="togglePopup('starters-popup')">
+                    <img src="images/starters.png" alt="Starters" class="category-image">
+                </a>
+                <p>Starters</p>
+            </div>
+
+            <div id="starters-popup" class="popup-overlay">
+                <div class="popup-content">
+                    <span class="close-button" onclick="togglePopup('starters-popup')">&times;</span>
+                    <h3>Starters</h3>
+                    <ul>
+                        <li>Bread Chilli | ₹39</li>
+                        <li>Honey Chilli Potato | ₹59</li>
+                        <li>Corn Salt and Pepper | ₹59</li>
+                        <li>Peri Peri Cheese Corn | ₹49</li>
+                        <li>Arancini Cheese Ball | ₹59</li>
+                        <li>French Fries | ₹59</li>
+                        <li>Empanda | ₹69</li>
+                        <li>Cabbage Surul | ₹59</li>
+                        <li>Peanut Masala | ₹49</li>
+                        <li>Stir Fry Cauliflower Yogurt Sauce | ₹49</li>
+                        <li>Peri Peri French Fries | ₹69</li>
+                        <li>Panneer Papad Delight | ₹59</li>                       
+                    </ul>
+                </div>
+            </div>
+            <!-- Shawarmas Category -->
+            <div class="menu-column">
+                <a href="javascript:void(0)" onclick="togglePopup('shawarma-popup', 8)">
+                    <img src="images/shawarma.png" alt="Shawarmas" class="category-image">
+                </a>
+                <p>Shawarmas</p>
+            </div>
+
+            <div id="shawarma-popup" class="popup-overlay">
+                <div class="popup-content">
+                    <span class="close-button" onclick="togglePopup('shawarma-popup', 8)">&times;</span>
+                    <h3>Shawarmas</h3>
+                    <ul>
+                        <li>Kupoos Mix Paneer Shawarma | ₹99/-</li>
+                        <li>Kurkure Mushroom Shawarma | ₹99/-</li>
+                        <li>Chipotle Arabic Mushroom Shawarma| ₹99/-</li>
+                        <li>Batman Chef Shawarma | ₹99/-</li>
+                        <li>Rocky Mexican Chipotle Paneer | ₹119/-</li>
+                        <li>Romeo Juliet Magalamp | ₹109/-</li>
+                        <li>BBQ Paneer Steak Shawarma | ₹119/-</li>
+                        <li>Gentle Man Mir Mayo Chicken Shawarma | ₹109/-</li>
+                        <li>KFC Murgh Malai Shawarma | ₹129/-</li>
+                        <li>Kuppos Chipotle Mir Chicken Shawarma | ₹109/-</li>
+                        <li>Kumban Cheese Jerk Shawarma | ₹119/-/li>
+                        <li>Cafun Spicy Mir Egg Wrap | ₹109/-</li>
+                        <li>Signature Smoked Chicken Shawarma | ₹129/-</li>
+                        <li>Beer Belt Fried Chicken Shawarma | ₹129/-</li>
+                        <li>CGV Chef Special Sauce Shawarma | ₹139/-</li>                        
+                    </ul>
+                </div>
+            </div>
+
+              <!-- Dosa Category -->
+            <div class="menu-column">
+                <a href="javascript:void(0)" onclick="togglePopup('dosa-popup', 8)">
+                    <img src="images/dosa.png" alt="Dosa" class="category-image">
+                </a>
+                <p>Dosa</p>
+            </div>
+
+            <div id="dosa-popup" class="popup-overlay">
+                <div class="popup-content">
+                    <span class="close-button" onclick="togglePopup('dosa-popup', 8)">&times;</span>
+                    <h3>Dosa</h3>
+                    <ul>
+                        <li>Ghee Podi Dosa | ₹79/-</li>
+                        <li>Masala Dosa | ₹79/-</li>
+                        <li>Mushroom Dosa | ₹89/-</li>
+                        <li>Cheese Dosa | ₹79/-</li>
+                        <li>Rocket Dosa | ₹99/-</li>
+                        <li>Chef Special Dosa | ₹89/-</li>
+                        <li>Fusion Dosa | ₹89/-</li>
+                        <li>Tomato Dosa | ₹69/-</li>
+                        <li>Hariyali Masala Dosa | ₹89/-</li>
+                        <li>Garlic Dosa | ₹79/-</li>
+                        <li>Mango Ginger Dosa | ₹89/-</li>
+                        <li>Kothu Kari Dosa | ₹199/-</li>
+                        <li>Chettinad Chicken Dosa | ₹109/-</li>
+                        <li>Egg Masala Dosa | ₹89/-</li>
+                        <li>Chicken Pizza Dosa | ₹99/-</li>
+                        <li>Capsicum Cheese Powder Dosa | ₹99/-</li>                                              
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Idly Category -->
+            <div class="menu-column">
+                <a href="javascript:void(0)" onclick="togglePopup('idly-popup', 8)">
+                    <img src="images/idly.png" alt="Idly" class="category-image">
+                </a>
+                <p>Idly</p>
+            </div>
+
+            <div id="idly-popup" class="popup-overlay">
+                <div class="popup-content">
+                    <span class="close-button" onclick="togglePopup('idly-popup', 8)">&times;</span>
+                    <h3>Idly</h3>
+                    <ul>
+                        <li>Ghee Podi Idly | ₹59/-</li>
+                        <li>Ghee Sambar Idly | ₹59/-</li>
+                        <li>Tadka Idly | ₹49/-</li>
+                        <li>Ghee Podi Thatte Idly | ₹59/-</li>
+                        <li>Ghee Sambar Thatte Idly | ₹59/-</li>
+                        <li>Spicy Masala Idly | ₹49/-</li>
+                        <li>Thatte Idly | ₹39/-</li>                                                                    
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Norukkal Category -->
+                <div class="menu-column">
+                    <a href="javascript:void(0)" onclick="togglePopup('norukkal-popup', 8)">
+                        <img src="images/norukkals.png" alt="Idly" class="category-image">
+                    </a>
+                    <p>Norukkals</p>
+                </div>
+
+                <div id="norukkal-popup" class="popup-overlay">
+                    <div class="popup-content">
+                        <span class="close-button" onclick="togglePopup('norukkal-popup', 8)">&times;</span>
+                        <h3>Norukkals</h3>
+                        <ul>
+                            <li>Plain Set | ₹19/-</li>
+                            <li>Mango Ginger Set | ₹29/-</li>
+                            <li>Pickle Onion Set | ₹29/-</li>
+                            <li>Paneer Set | ₹39/-</li>
+                            <li>Egg Set | ₹39/-</li>
+                            <li>BBQ Chicken Set | ₹49/-</li>
+                            <li>Mayonnaise Set | ₹29/-</li>
+                            <li>Spicy Tuna Set | ₹39/-</li>
+                            <li>Plain Garam | ₹29/-</li>
+                            <li>Sweet and Spicy Garam | ₹39/-</li>
+                            <li>Egg Garam | ₹39/-</li>
+                            <li>Kadala Garam | ₹29/-</li>
+                            <li>Divine Chicken Garam | ₹49/-</li>                                                                                            
+                        </ul>
+                    </div>
+                </div>
+
+            <!-- Waffles Category -->
+                <div class="menu-column">
+                    <a href="javascript:void(0)" onclick="togglePopup('waffles-popup', 8)">
+                        <img src="images/waffles.png" alt="Waffles" class="category-image">
+                    </a>
+                    <p>Waffles</p>
+                </div>
+
+                <div id="waffles-popup" class="popup-overlay">
+                    <div class="popup-content">
+                        <span class="close-button" onclick="togglePopup('waffles-popup', 8)">&times;</span>
+                        <h3>Waffles</h3>
+                        <ul>
+                            <li>Caramelized Banana Waffle | ₹59/-</li>
+                            <li>Custard Sugar Waffle | ₹49/-</li>
+                            <li>Dark Chocolate Almond Waffle | ₹69/-</li>
+                            <li>White Chocolate Strawberry Waffle | ₹69/-</li>
+                            <li>Mix Fruit Waffle | ₹59/-</li>
+                            <li>Double Chocolate Rainbow Waffle | ₹69/-</li>
+                            <li>Golden Sugar Waffle | ₹59/-</li>
+                            <li>Gulab Jamun Bun Butter Jam | ₹59/-</li>
+                            <li>Gulkand Golden Bun Butter | ₹49/-</li>
+                            <li>Kit Kat Chocolate Bun | ₹49/-</li>
+                            <li>Cheese Butter Bun | ₹49/-</li>
+                            <li>Rocket Waffle | ₹59/-</li>
+                            <li>Double Chocolate Rainbow Bun | ₹69/-</li>
+                            <li>Rabdi Bun Butter Jamun | ₹69/-</li>                                                             
+                        </ul>
+                    </div>
+                </div>
+
+          <!-- Dim Sum Category -->
+            <div class="menu-column">
+                <a href="javascript:void(0)" onclick="togglePopup('dimsum-popup', 8)">
+                    <img src="images/dimsum.png" alt="Dim Sum" class="category-image">
+                </a>
+                <p>Dim Sum</p>
+            </div>
+
+            <div id="dimsum-popup" class="popup-overlay">
+                <div class="popup-content">
+                    <span class="close-button" onclick="togglePopup('dimsum-popup', 8)">&times;</span>
+                    <h3>Dim Sum</h3>
+                    <ul>
+                        <li>Veg Dim Sum (Steam/Fry) | ₹59/-</li>
+                        <li>Egg Dim Sum (Steam/Fry) | ₹59/-</li>
+                        <li>Chicken Dim Sum (Steam/Fry) | ₹69/-</li>
+                        <li>Motu Sesame Peanut Dim Sum | ₹79/-</li>                                                                  
+                    </ul>
+                </div>
+            </div>
+
+          <!-- Lassi Category -->
+            <div class="menu-column">
+                <a href="javascript:void(0)" onclick="togglePopup('lassi-popup', 8)">
+                    <img src="images/lassi.png" alt="Lassi" class="category-image">
+                </a>
+                <p>Lassi</p>
+            </div>
+
+            <div id="lassi-popup" class="popup-overlay">
+                <div class="popup-content">
+                    <span class="close-button" onclick="togglePopup('lassi-popup', 8)">&times;</span>
+                    <h3>Lassi</h3>
+                    <ul>
+                        <li>Sweet Lassi | ₹29/-</li>
+                        <li>Sweet & Salt Lassi | ₹29/-</li>
+                        <li>Mango Lassi | ₹39/-</li>
+                        <li>Banana Lassi | ₹49/-</li>
+                        <li>Mixfruit Lassi | ₹59/-</li>
+                        <li>Strawberry Lassi | ₹39/-</li>
+                        <li>Green Paneer Lassi | ₹49/-</li>
+                        <li>Mint & Ginger Lassi | ₹39/-</li>
+                        <li>Basic & Mint Lassi | ₹39/-</li>
+                        <li>Orange Lassi | ₹39/-</li>                                                                   
+                    </ul>
+                </div>
+            </div>
+
+          <!-- Mojito Category -->
+            <div class="menu-column">
+                <a href="javascript:void(0)" onclick="togglePopup('mojito-popup', 8)">
+                    <img src="images/mojito.png" alt="Mojito" class="category-image">
+                </a>
+                <p>Mojito</p>
+            </div>
+
+            <div id="mojito-popup" class="popup-overlay">
+                <div class="popup-content">
+                    <span class="close-button" onclick="togglePopup('mojito-popup', 8)">&times;</span>
+                    <h3>Mojito</h3>
+                    <ul>
+                        <li>Blue and Mint Mojito | ₹69/-</li>
+                        <li>Blue Berry Mojito | ₹79/-</li>
+                        <li>Guava Mojito | ₹69/-</li>
+                        <li>Cocojito Mojito | ₹79/-</li>
+                        <li>Grilled Pineapple Mojito | ₹69/-</li>
+                        <li>Watermelon and Mint Mojito | ₹69/-</li>                                                                  
+                    </ul>
+                </div>
+            </div>
+
+          <!-- Fruit Milkshakes Category -->
+            <div class="menu-column">
+                <a href="javascript:void(0)" onclick="togglePopup('milkshakes-popup', 8)">
+                    <img src="images/milkshakes.png" alt="Fruit Milkshakes" class="category-image">
+                </a>
+                <p>Fruit Milkshakes</p>
+            </div>
+
+            <div id="milkshakes-popup" class="popup-overlay">
+                <div class="popup-content">
+                    <span class="close-button" onclick="togglePopup('milkshakes-popup', 8)">&times;</span>
+                    <h3>Fruit Milkshakes</h3>
+                    <ul>
+                        <li>Apple and Oreo Milkshake | ₹79/-</li>
+                        <li>Kit Kat and Banana Milkshake | ₹79/-</li>
+                        <li>Fig and Dates Shake | ₹89/-</li>
+                        <li>Strawberry Rose Shake | ₹79/-</li>
+                        <li>Summer Special Mango Shake | ₹79/-</li>
+                        <li>Popeye Dry Fruit Makhana Shake | ₹89/-</li>
+                        <li>Boost and Papaya Shake | ₹69/-</li>
+                        <li>Dragon Fruits Golden Sugar Shake | ₹79/-</li>
+                        <li>Avocado Red Banana Shake | ₹89/-</li>                                                                  
+                    </ul>
+                </div>
+            </div>
+
+          <!-- Juice Category -->
+            <div class="menu-column">
+                <a href="javascript:void(0)" onclick="togglePopup('juice-popup', 8)">
+                    <img src="images/juice.png" alt="Juice" class="category-image">
+                </a>
+                <p>Juice</p>
+            </div>
+
+            <div id="juice-popup" class="popup-overlay">
+                <div class="popup-content">
+                    <span class="close-button" onclick="togglePopup('juice-popup', 8)">&times;</span>
+                    <h3>Juice</h3>
+                    <ul>
+                        <li>Watermelon Juice | ₹39/-</li>
+                        <li>Honey Melon Juice | ₹39/-</li>
+                        <li>Musky Melon Juice | ₹49/-</li>
+                        <li>Sweet Lime Juice | ₹39/-</li>
+                        <li>Green Iceland Juice | ₹49/-</li>
+                        <li>Lime Juice | ₹39/-</li>
+                        <li>Orange Juice | ₹59/-</li>
+                        <li>Powder Booster Juice | ₹59/-</li>
+                        <li>Summer Dream Juice | ₹59/-</li>
+                        <li>Apple Juice | ₹49/-</li>
+                        <li>Pineapple Juice | ₹49/-</li>                                                                   
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Deserts Category -->
+                <div class="menu-column">
+                    <a href="javascript:void(0)" onclick="togglePopup('deserts-popup', 8)">
+                        <img src="images/deserts.png" alt="Deserts" class="category-image">
+                    </a>
+                    <p>Deserts</p>
+                </div>
+
+                <div id="deserts-popup" class="popup-overlay">
+                    <div class="popup-content">
+                        <span class="close-button" onclick="togglePopup('deserts-popup', 8)">&times;</span>
+                        <h3>Deserts</h3>
+                        <ul>
+                            <li>Gajar Ka Halwa | ₹49/-</li>
+                            <li>Beetroot Halwa | ₹49/-</li>
+                            <li>Millet Kheer | ₹39/-</li>
+                            <li>Ghewar | ₹69/-</li>
+                            <li>Gulab Jamun | ₹39/-</li>
+                            <li>Tres Leches Milk Cake | ₹59/-</li>
+                            <li>Kunafa | ₹69/-</li>
+                            <li>Gulab Jamun & Ice Cream | ₹49/-</li>
+                            <li>Tender Coconut Payasam | ₹69/-</li>                                                                
+                        </ul>
+                    </div>
+                </div>
+
+          <!-- Ice Creams Category -->
+            <div class="menu-column">
+                <a href="javascript:void(0)" onclick="togglePopup('icecream-popup', 8)">
+                    <img src="images/icecream.png" alt="Ice Creams" class="category-image">
+                </a>
+                <p>Ice Creams</p>
+            </div>
+
+            <div id="icecream-popup" class="popup-overlay">
+                <div class="popup-content">
+                    <span class="close-button" onclick="togglePopup('icecream-popup', 8)">&times;</span>
+                    <h3>Ice Creams</h3>
+                    <ul>
+                        <li>Vanilla Ice Cream | ₹49/-</li>
+                        <li>Chocolate Ice Cream | ₹59/-</li>
+                        <li>Strawberry Ice Cream | ₹59/-</li>
+                        <li>Chocobar Ice Cream | ₹69/-</li>
+                        <li>Mango Ice Cream | ₹49/-</li>                                                                                          
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div> 
+
+</body>
+</html>
+=======
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CGV Divine Foods - Menu</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f5f0;
+            background-image: url('background-menu.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            color: #3e2723;
+        }
+
+        header {
+            background-color: #3e2723;
+            color: #fdd835;
+            text-align: left;
+            padding: 10px;
+            position: relative;
+        }
+
+        .search-bar {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .search-bar input {
+            padding: 5px;
+            border: 2px solid #fdd835;
+            border-radius: 5px;
+        }
+
+        h1, h2 {
+            margin: 10px 0;
+        }
+
+        .menu-section {
+            padding: 10px;
+            border-bottom: 1px solid #fdd835;
+        }
+
+        .menu-section h2 {
+            text-align: center;
+            color: #3e2723;
+            background-color: #fdd835;
+            padding: 10px;
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.4);
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .menu-section h2:hover {
+            transform: scale(1.1);
+            border-radius: 10px;
+        }
+        .menu-items {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+            justify-items: center;
+        }
+
+        .category-image {
+            width: 200px;
+            height: 180px;
+            object-fit: cover;
+            border: 2px solid #fdd835;
+            border-radius: 10px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background-color: #3e2723;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .category-image:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .menu-column p {
+            text-align: center;
+            font-size: 1rem;
+            margin-top: 10px;
+            color: #3e2723;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px #fdd835;;
+        }
+        .menu-column:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        .popup-overlay {
+            display: none;
+            position:fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .popup-content {
+            background-color: #f8f5f0;
+            color: #3e2723;
+            padding: 20px;
+            border-radius: 20px;
+            text-align: justify;
+            width: 400px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        .popup-content h3 {
+            margin: 0 0 20px;
+            font-size: 1.5rem;
+            color: #3e2723;
+            text-shadow: 2px 2px 4px #fdd835;;
+        }
+
+        .popup-content ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            gap: 10px;
+        }
+        .popup-content ul.multi-column {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .popup-content li {
+            margin: 10px 0;
+            font-size: 1.2rem;
+            color: #3e2723;
+        }
+
+        .close-button {
+            font-size: 3rem;
+            cursor: pointer;
+            color: #fdd835;
+            position:fixed;
+            top: 130px;
+            right: 370px;
+        }
+    </style>
+    <script>
+        function searchMenu(event) {
+            const query = event.target.value.toLowerCase();
+            const categories = document.querySelectorAll('.menu-column p'); // Select category names (e.g., "Soups")
+            const suggestionBox = document.getElementById('suggestion-box');
+            
+            suggestionBox.innerHTML = ''; // Clear previous suggestions
+            suggestionBox.style.display = 'none';
+            
+            // Reset visibility if search query is empty
+            if (query.trim() === '') {
+                categories.forEach(category => category.parentElement.style.display = 'block'); // Show all categories
+                return;
+            }
+
+            let suggestions = [];
+
+            // Search for matching category names
+            categories.forEach(category => {
+                const categoryText = category.textContent.toLowerCase();
+                const parentColumn = category.parentElement; // Get the parent menu-column div
+                
+                if (categoryText.includes(query)) {
+                    parentColumn.style.display = 'block'; // Show matching categories
+                    suggestions.push(categoryText);
+                } else {
+                    parentColumn.style.display = 'none'; // Hide non-matching categories
+                }
+            });
+
+            // Populate the suggestion box
+            if (suggestions.length > 0) {
+                suggestionBox.style.display = 'block';
+                const uniqueSuggestions = [...new Set(suggestions)]; // Avoid duplicate suggestions
+                uniqueSuggestions.forEach(suggestion => {
+                    const suggestionItem = document.createElement('li');
+                    suggestionItem.textContent = suggestion;
+                    suggestionItem.style.padding = '5px';
+                    suggestionItem.style.cursor = 'pointer';
+
+                    // Clicking a suggestion scrolls to the matching section
+                    suggestionItem.onclick = () => {
+                        const matchingCategory = Array.from(categories).find(
+                            category => category.textContent.toLowerCase() === suggestion
+                        );
+                        if (matchingCategory) {
+                            matchingCategory.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                        event.target.value = suggestion; // Auto-fill search bar with selected suggestion
+                        suggestionBox.innerHTML = '';
+                        suggestionBox.style.display = 'none';
+                    };
+
+                    suggestionBox.appendChild(suggestionItem);
+                });
+            }
+        }
+        function togglePopup(popupId) {
+            const popup = document.getElementById(popupId);
+            popup.style.display = popup.style.display === "flex" ? "none" : "flex";
+
+            // Adjust layout dynamically
+            const popupList = popup.querySelector("ul");
+            const itemCount = popupList.children.length;
+
+            if (itemCount > 6) {
+                popupList.classList.add("multi-column"); // Two-column layout
+            } else {
+                popupList.classList.remove("multi-column"); // Single column
+            }
+        }
+    </script>
+</head>
+<body>
+    <!-- ---------------------------------------------HTML----------------------------------------- -->
+    <header>
+        <h1>&nbsp;&nbsp;&nbsp;CGV Divine Foods</h1>
+        <div class="search-bar">
+            <input type="text" id="search-input" placeholder="Search menu..." oninput="searchMenu(event)">
+            <ul id="suggestion-box" style="list-style: none; padding: 0; margin: 5px 0 0; background: #fdd835; color: #3e2723; border-radius: 5px; max-height: 150px; overflow-y: auto; display: none;"></ul>
+        </div>
+    </header>
+    
+    <div class="menu-section">
+        <h2>Categories</h2>
+        <div class="menu-items">
+            <!-- Soups Category -->
+            <div class="menu-column">
+                <a href="javascript:void(0)" onclick="togglePopup('soup-popup')">
+                    <img src="images/soup.png" alt="Soups" class="category-image">
+                </a>
+                <p>Soups</p>
+            </div>
+            
+            <div id="soup-popup" class="popup-overlay">
+                <div class="popup-content">
+                    <span class="close-button" onclick="togglePopup('soup-popup')">&times;</span>
+                    <h3>Soups</h3>
+                    <ul>
+                        <li> Broccoli Soup | ₹69/- </li>
+                        <li> Mushroom Soup | ₹59/- </li>
+                        <li> Basil Tomato Soup | ₹39/-</li>
+                        <li> Manchow Soup | ₹59/- </li>
+                        <li> Creamy Chicken Soup | ₹69/- </li>
+                        <li> Egg Drop Soup | ₹59/- </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- Salads Category -->
+            <div class="menu-column">
+                <a href="javascript:void(0)" onclick="togglePopup('salad-popup')">
+                    <img src="images/salad.png" alt="Salads" class="category-image">
+                </a>
+                <p>Salads</p>
+            </div>
+
+            <div id="salad-popup" class="popup-overlay">
+                <div class="popup-content">
+                    <span class="close-button" onclick="togglePopup('salad-popup')">&times;</span>
+                    <h3>Salads</h3>
+                    <ul>
+                        <li>Fruit Salad with Ice Cream | ₹79</li>
+                        <li>Beet and Apple Salad | ₹89</li>
+                        <li>Watermelon Green Peas & Lemon Leaf | ₹79/-</li>
+                        <li>Before Gym Salad | ₹69/-</li>
+                        <li>Sweet Honey Coleslaw | ₹79/-</li>
+                        <li>Cucumber Melon Feta Salad | ₹89/-</li>
+                    </ul>
+                </div>
+            </div>
+            <!-- Starters Category -->
+            <div class="menu-column">
+                <a href="javascript:void(0)" onclick="togglePopup('starters-popup')">
+                    <img src="images/starters.png" alt="Starters" class="category-image">
+                </a>
+                <p>Starters</p>
+            </div>
+
+            <div id="starters-popup" class="popup-overlay">
+                <div class="popup-content">
+                    <span class="close-button" onclick="togglePopup('starters-popup')">&times;</span>
+                    <h3>Starters</h3>
+                    <ul>
+                        <li>Bread Chilli | ₹39</li>
+                        <li>Honey Chilli Potato | ₹59</li>
+                        <li>Corn Salt and Pepper | ₹59</li>
+                        <li>Peri Peri Cheese Corn | ₹49</li>
+                        <li>Arancini Cheese Ball | ₹59</li>
+                        <li>French Fries | ₹59</li>
+                        <li>Empanda | ₹69</li>
+                        <li>Cabbage Surul | ₹59</li>
+                        <li>Peanut Masala | ₹49</li>
+                        <li>Stir Fry Cauliflower Yogurt Sauce | ₹49</li>
+                        <li>Peri Peri French Fries | ₹69</li>
+                        <li>Panneer Papad Delight | ₹59</li>                       
+                    </ul>
+                </div>
+            </div>
+            <!-- Shawarmas Category -->
+            <div class="menu-column">
+                <a href="javascript:void(0)" onclick="togglePopup('shawarma-popup', 8)">
+                    <img src="images/shawarma.png" alt="Shawarmas" class="category-image">
+                </a>
+                <p>Shawarmas</p>
+            </div>
+
+            <div id="shawarma-popup" class="popup-overlay">
+                <div class="popup-content">
+                    <span class="close-button" onclick="togglePopup('shawarma-popup', 8)">&times;</span>
+                    <h3>Shawarmas</h3>
+                    <ul>
+                        <li>Kupoos Mix Paneer Shawarma | ₹99/-</li>
+                        <li>Kurkure Mushroom Shawarma | ₹99/-</li>
+                        <li>Chipotle Arabic Mushroom Shawarma| ₹99/-</li>
+                        <li>Batman Chef Shawarma | ₹99/-</li>
+                        <li>Rocky Mexican Chipotle Paneer | ₹119/-</li>
+                        <li>Romeo Juliet Magalamp | ₹109/-</li>
+                        <li>BBQ Paneer Steak Shawarma | ₹119/-</li>
+                        <li>Gentle Man Mir Mayo Chicken Shawarma | ₹109/-</li>
+                        <li>KFC Murgh Malai Shawarma | ₹129/-</li>
+                        <li>Kuppos Chipotle Mir Chicken Shawarma | ₹109/-</li>
+                        <li>Kumban Cheese Jerk Shawarma | ₹119/-/li>
+                        <li>Cafun Spicy Mir Egg Wrap | ₹109/-</li>
+                        <li>Signature Smoked Chicken Shawarma | ₹129/-</li>
+                        <li>Beer Belt Fried Chicken Shawarma | ₹129/-</li>
+                        <li>CGV Chef Special Sauce Shawarma | ₹139/-</li>                        
+                    </ul>
+                </div>
+            </div>
+
+              <!-- Dosa Category -->
+            <div class="menu-column">
+                <a href="javascript:void(0)" onclick="togglePopup('dosa-popup', 8)">
+                    <img src="images/dosa.png" alt="Dosa" class="category-image">
+                </a>
+                <p>Dosa</p>
+            </div>
+
+            <div id="dosa-popup" class="popup-overlay">
+                <div class="popup-content">
+                    <span class="close-button" onclick="togglePopup('dosa-popup', 8)">&times;</span>
+                    <h3>Dosa</h3>
+                    <ul>
+                        <li>Ghee Podi Dosa | ₹79/-</li>
+                        <li>Masala Dosa | ₹79/-</li>
+                        <li>Mushroom Dosa | ₹89/-</li>
+                        <li>Cheese Dosa | ₹79/-</li>
+                        <li>Rocket Dosa | ₹99/-</li>
+                        <li>Chef Special Dosa | ₹89/-</li>
+                        <li>Fusion Dosa | ₹89/-</li>
+                        <li>Tomato Dosa | ₹69/-</li>
+                        <li>Hariyali Masala Dosa | ₹89/-</li>
+                        <li>Garlic Dosa | ₹79/-</li>
+                        <li>Mango Ginger Dosa | ₹89/-</li>
+                        <li>Kothu Kari Dosa | ₹199/-</li>
+                        <li>Chettinad Chicken Dosa | ₹109/-</li>
+                        <li>Egg Masala Dosa | ₹89/-</li>
+                        <li>Chicken Pizza Dosa | ₹99/-</li>
+                        <li>Capsicum Cheese Powder Dosa | ₹99/-</li>                                              
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Idly Category -->
+            <div class="menu-column">
+                <a href="javascript:void(0)" onclick="togglePopup('idly-popup', 8)">
+                    <img src="images/idly.png" alt="Idly" class="category-image">
+                </a>
+                <p>Idly</p>
+            </div>
+
+            <div id="idly-popup" class="popup-overlay">
+                <div class="popup-content">
+                    <span class="close-button" onclick="togglePopup('idly-popup', 8)">&times;</span>
+                    <h3>Idly</h3>
+                    <ul>
+                        <li>Ghee Podi Idly | ₹59/-</li>
+                        <li>Ghee Sambar Idly | ₹59/-</li>
+                        <li>Tadka Idly | ₹49/-</li>
+                        <li>Ghee Podi Thatte Idly | ₹59/-</li>
+                        <li>Ghee Sambar Thatte Idly | ₹59/-</li>
+                        <li>Spicy Masala Idly | ₹49/-</li>
+                        <li>Thatte Idly | ₹39/-</li>                                                                    
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Norukkal Category -->
+                <div class="menu-column">
+                    <a href="javascript:void(0)" onclick="togglePopup('norukkal-popup', 8)">
+                        <img src="images/norukkals.png" alt="Idly" class="category-image">
+                    </a>
+                    <p>Norukkals</p>
+                </div>
+
+                <div id="norukkal-popup" class="popup-overlay">
+                    <div class="popup-content">
+                        <span class="close-button" onclick="togglePopup('norukkal-popup', 8)">&times;</span>
+                        <h3>Norukkals</h3>
+                        <ul>
+                            <li>Plain Set | ₹19/-</li>
+                            <li>Mango Ginger Set | ₹29/-</li>
+                            <li>Pickle Onion Set | ₹29/-</li>
+                            <li>Paneer Set | ₹39/-</li>
+                            <li>Egg Set | ₹39/-</li>
+                            <li>BBQ Chicken Set | ₹49/-</li>
+                            <li>Mayonnaise Set | ₹29/-</li>
+                            <li>Spicy Tuna Set | ₹39/-</li>
+                            <li>Plain Garam | ₹29/-</li>
+                            <li>Sweet and Spicy Garam | ₹39/-</li>
+                            <li>Egg Garam | ₹39/-</li>
+                            <li>Kadala Garam | ₹29/-</li>
+                            <li>Divine Chicken Garam | ₹49/-</li>                                                                                            
+                        </ul>
+                    </div>
+                </div>
+
+            <!-- Waffles Category -->
+                <div class="menu-column">
+                    <a href="javascript:void(0)" onclick="togglePopup('waffles-popup', 8)">
+                        <img src="images/waffles.png" alt="Waffles" class="category-image">
+                    </a>
+                    <p>Waffles</p>
+                </div>
+
+                <div id="waffles-popup" class="popup-overlay">
+                    <div class="popup-content">
+                        <span class="close-button" onclick="togglePopup('waffles-popup', 8)">&times;</span>
+                        <h3>Waffles</h3>
+                        <ul>
+                            <li>Caramelized Banana Waffle | ₹59/-</li>
+                            <li>Custard Sugar Waffle | ₹49/-</li>
+                            <li>Dark Chocolate Almond Waffle | ₹69/-</li>
+                            <li>White Chocolate Strawberry Waffle | ₹69/-</li>
+                            <li>Mix Fruit Waffle | ₹59/-</li>
+                            <li>Double Chocolate Rainbow Waffle | ₹69/-</li>
+                            <li>Golden Sugar Waffle | ₹59/-</li>
+                            <li>Gulab Jamun Bun Butter Jam | ₹59/-</li>
+                            <li>Gulkand Golden Bun Butter | ₹49/-</li>
+                            <li>Kit Kat Chocolate Bun | ₹49/-</li>
+                            <li>Cheese Butter Bun | ₹49/-</li>
+                            <li>Rocket Waffle | ₹59/-</li>
+                            <li>Double Chocolate Rainbow Bun | ₹69/-</li>
+                            <li>Rabdi Bun Butter Jamun | ₹69/-</li>                                                             
+                        </ul>
+                    </div>
+                </div>
+
+          <!-- Dim Sum Category -->
+            <div class="menu-column">
+                <a href="javascript:void(0)" onclick="togglePopup('dimsum-popup', 8)">
+                    <img src="images/dimsum.png" alt="Dim Sum" class="category-image">
+                </a>
+                <p>Dim Sum</p>
+            </div>
+
+            <div id="dimsum-popup" class="popup-overlay">
+                <div class="popup-content">
+                    <span class="close-button" onclick="togglePopup('dimsum-popup', 8)">&times;</span>
+                    <h3>Dim Sum</h3>
+                    <ul>
+                        <li>Veg Dim Sum (Steam/Fry) | ₹59/-</li>
+                        <li>Egg Dim Sum (Steam/Fry) | ₹59/-</li>
+                        <li>Chicken Dim Sum (Steam/Fry) | ₹69/-</li>
+                        <li>Motu Sesame Peanut Dim Sum | ₹79/-</li>                                                                  
+                    </ul>
+                </div>
+            </div>
+
+          <!-- Lassi Category -->
+            <div class="menu-column">
+                <a href="javascript:void(0)" onclick="togglePopup('lassi-popup', 8)">
+                    <img src="images/lassi.png" alt="Lassi" class="category-image">
+                </a>
+                <p>Lassi</p>
+            </div>
+
+            <div id="lassi-popup" class="popup-overlay">
+                <div class="popup-content">
+                    <span class="close-button" onclick="togglePopup('lassi-popup', 8)">&times;</span>
+                    <h3>Lassi</h3>
+                    <ul>
+                        <li>Sweet Lassi | ₹29/-</li>
+                        <li>Sweet & Salt Lassi | ₹29/-</li>
+                        <li>Mango Lassi | ₹39/-</li>
+                        <li>Banana Lassi | ₹49/-</li>
+                        <li>Mixfruit Lassi | ₹59/-</li>
+                        <li>Strawberry Lassi | ₹39/-</li>
+                        <li>Green Paneer Lassi | ₹49/-</li>
+                        <li>Mint & Ginger Lassi | ₹39/-</li>
+                        <li>Basic & Mint Lassi | ₹39/-</li>
+                        <li>Orange Lassi | ₹39/-</li>                                                                   
+                    </ul>
+                </div>
+            </div>
+
+          <!-- Mojito Category -->
+            <div class="menu-column">
+                <a href="javascript:void(0)" onclick="togglePopup('mojito-popup', 8)">
+                    <img src="images/mojito.png" alt="Mojito" class="category-image">
+                </a>
+                <p>Mojito</p>
+            </div>
+
+            <div id="mojito-popup" class="popup-overlay">
+                <div class="popup-content">
+                    <span class="close-button" onclick="togglePopup('mojito-popup', 8)">&times;</span>
+                    <h3>Mojito</h3>
+                    <ul>
+                        <li>Blue and Mint Mojito | ₹69/-</li>
+                        <li>Blue Berry Mojito | ₹79/-</li>
+                        <li>Guava Mojito | ₹69/-</li>
+                        <li>Cocojito Mojito | ₹79/-</li>
+                        <li>Grilled Pineapple Mojito | ₹69/-</li>
+                        <li>Watermelon and Mint Mojito | ₹69/-</li>                                                                  
+                    </ul>
+                </div>
+            </div>
+
+          <!-- Fruit Milkshakes Category -->
+            <div class="menu-column">
+                <a href="javascript:void(0)" onclick="togglePopup('milkshakes-popup', 8)">
+                    <img src="images/milkshakes.png" alt="Fruit Milkshakes" class="category-image">
+                </a>
+                <p>Fruit Milkshakes</p>
+            </div>
+
+            <div id="milkshakes-popup" class="popup-overlay">
+                <div class="popup-content">
+                    <span class="close-button" onclick="togglePopup('milkshakes-popup', 8)">&times;</span>
+                    <h3>Fruit Milkshakes</h3>
+                    <ul>
+                        <li>Apple and Oreo Milkshake | ₹79/-</li>
+                        <li>Kit Kat and Banana Milkshake | ₹79/-</li>
+                        <li>Fig and Dates Shake | ₹89/-</li>
+                        <li>Strawberry Rose Shake | ₹79/-</li>
+                        <li>Summer Special Mango Shake | ₹79/-</li>
+                        <li>Popeye Dry Fruit Makhana Shake | ₹89/-</li>
+                        <li>Boost and Papaya Shake | ₹69/-</li>
+                        <li>Dragon Fruits Golden Sugar Shake | ₹79/-</li>
+                        <li>Avocado Red Banana Shake | ₹89/-</li>                                                                  
+                    </ul>
+                </div>
+            </div>
+
+          <!-- Juice Category -->
+            <div class="menu-column">
+                <a href="javascript:void(0)" onclick="togglePopup('juice-popup', 8)">
+                    <img src="images/juice.png" alt="Juice" class="category-image">
+                </a>
+                <p>Juice</p>
+            </div>
+
+            <div id="juice-popup" class="popup-overlay">
+                <div class="popup-content">
+                    <span class="close-button" onclick="togglePopup('juice-popup', 8)">&times;</span>
+                    <h3>Juice</h3>
+                    <ul>
+                        <li>Watermelon Juice | ₹39/-</li>
+                        <li>Honey Melon Juice | ₹39/-</li>
+                        <li>Musky Melon Juice | ₹49/-</li>
+                        <li>Sweet Lime Juice | ₹39/-</li>
+                        <li>Green Iceland Juice | ₹49/-</li>
+                        <li>Lime Juice | ₹39/-</li>
+                        <li>Orange Juice | ₹59/-</li>
+                        <li>Powder Booster Juice | ₹59/-</li>
+                        <li>Summer Dream Juice | ₹59/-</li>
+                        <li>Apple Juice | ₹49/-</li>
+                        <li>Pineapple Juice | ₹49/-</li>                                                                   
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Deserts Category -->
+                <div class="menu-column">
+                    <a href="javascript:void(0)" onclick="togglePopup('deserts-popup', 8)">
+                        <img src="images/deserts.png" alt="Deserts" class="category-image">
+                    </a>
+                    <p>Deserts</p>
+                </div>
+
+                <div id="deserts-popup" class="popup-overlay">
+                    <div class="popup-content">
+                        <span class="close-button" onclick="togglePopup('deserts-popup', 8)">&times;</span>
+                        <h3>Deserts</h3>
+                        <ul>
+                            <li>Gajar Ka Halwa | ₹49/-</li>
+                            <li>Beetroot Halwa | ₹49/-</li>
+                            <li>Millet Kheer | ₹39/-</li>
+                            <li>Ghewar | ₹69/-</li>
+                            <li>Gulab Jamun | ₹39/-</li>
+                            <li>Tres Leches Milk Cake | ₹59/-</li>
+                            <li>Kunafa | ₹69/-</li>
+                            <li>Gulab Jamun & Ice Cream | ₹49/-</li>
+                            <li>Tender Coconut Payasam | ₹69/-</li>                                                                
+                        </ul>
+                    </div>
+                </div>
+
+          <!-- Ice Creams Category -->
+            <div class="menu-column">
+                <a href="javascript:void(0)" onclick="togglePopup('icecream-popup', 8)">
+                    <img src="images/icecream.png" alt="Ice Creams" class="category-image">
+                </a>
+                <p>Ice Creams</p>
+            </div>
+
+            <div id="icecream-popup" class="popup-overlay">
+                <div class="popup-content">
+                    <span class="close-button" onclick="togglePopup('icecream-popup', 8)">&times;</span>
+                    <h3>Ice Creams</h3>
+                    <ul>
+                        <li>Vanilla Ice Cream | ₹49/-</li>
+                        <li>Chocolate Ice Cream | ₹59/-</li>
+                        <li>Strawberry Ice Cream | ₹59/-</li>
+                        <li>Chocobar Ice Cream | ₹69/-</li>
+                        <li>Mango Ice Cream | ₹49/-</li>                                                                                          
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div> 
+
+</body>
+</html>
+>>>>>>> 61a0540 (Initial commit)
