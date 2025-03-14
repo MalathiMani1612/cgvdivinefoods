@@ -33,7 +33,7 @@
         }
 
         .search-bar input {
-            padding: 5px;
+            padding: 10px;
             border: 2px solid #fdd835;
             border-radius: 5px;
         }
@@ -184,6 +184,78 @@
             }
         }
     </style>
+        <script>
+            function searchMenu(event) {
+                const query = event.target.value.toLowerCase();
+                const categories = document.querySelectorAll('.menu-column p'); // Select category names (e.g., "Soups")
+                const suggestionBox = document.getElementById('suggestion-box');
+                
+                suggestionBox.innerHTML = ''; // Clear previous suggestions
+                suggestionBox.style.display = 'none';
+                
+                // Reset visibility if search query is empty
+                if (query.trim() === '') {
+                    categories.forEach(category => category.parentElement.style.display = 'block'); // Show all categories
+                    return;
+                }
+    
+                let suggestions = [];
+    
+                // Search for matching category names
+                categories.forEach(category => {
+                    const categoryText = category.textContent.toLowerCase();
+                    const parentColumn = category.parentElement; // Get the parent menu-column div
+                    
+                    if (categoryText.includes(query)) {
+                        parentColumn.style.display = 'block'; // Show matching categories
+                        suggestions.push(categoryText);
+                    } else {
+                        parentColumn.style.display = 'none'; // Hide non-matching categories
+                    }
+                });
+    
+                // Populate the suggestion box
+                if (suggestions.length > 0) {
+                    suggestionBox.style.display = 'block';
+                    const uniqueSuggestions = [...new Set(suggestions)]; // Avoid duplicate suggestions
+                    uniqueSuggestions.forEach(suggestion => {
+                        const suggestionItem = document.createElement('li');
+                        suggestionItem.textContent = suggestion;
+                        suggestionItem.style.padding = '5px';
+                        suggestionItem.style.cursor = 'pointer';
+    
+                        // Clicking a suggestion scrolls to the matching section
+                        suggestionItem.onclick = () => {
+                            const matchingCategory = Array.from(categories).find(
+                                category => category.textContent.toLowerCase() === suggestion
+                            );
+                            if (matchingCategory) {
+                                matchingCategory.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            }
+                            event.target.value = suggestion; // Auto-fill search bar with selected suggestion
+                            suggestionBox.innerHTML = '';
+                            suggestionBox.style.display = 'none';
+                        };
+    
+                        suggestionBox.appendChild(suggestionItem);
+                    });
+                }
+            }
+            function togglePopup(popupId) {
+                const popup = document.getElementById(popupId);
+                popup.style.display = popup.style.display === "flex" ? "none" : "flex";
+    
+                // Adjust layout dynamically
+                const popupList = popup.querySelector("ul");
+                const itemCount = popupList.children.length;
+    
+                if (itemCount > 6) {
+                    popupList.classList.add("multi-column"); // Two-column layout
+                } else {
+                    popupList.classList.remove("multi-column"); // Single column
+                }
+            }
+        </script>
 </head>
 <body>
     <!-- ---------------------------------------------HTML----------------------------------------- -->
@@ -211,12 +283,12 @@
                     <span class="close-button" onclick="togglePopup('soup-popup')">&times;</span>
                     <h3>Soups</h3>
                     <ul>
-                        <li> Broccoli Soup | ₹69/- </li>
-                        <li> Mushroom Soup | ₹59/- </li>
-                        <li> Basil Tomato Soup | ₹39/-</li>
-                        <li> Manchow Soup | ₹59/- </li>
-                        <li> Creamy Chicken Soup | ₹69/- </li>
-                        <li> Egg Drop Soup | ₹59/- </li>
+                        <li> Broccoli Soup </li>
+                        <li> Mushroom Soup </li>
+                        <li> Basil Tomato Soup </li>
+                        <li> Manchow Soup </li>
+                        <li> Creamy Chicken Soup </li>
+                        <li> Egg Drop Soup </li>
                     </ul>
                 </div>
             </div>
@@ -233,12 +305,12 @@
                     <span class="close-button" onclick="togglePopup('salad-popup')">&times;</span>
                     <h3>Salads</h3>
                     <ul>
-                        <li>Fruit Salad with Ice Cream | ₹79</li>
-                        <li>Beet and Apple Salad | ₹89</li>
-                        <li>Watermelon Green Peas & Lemon Leaf | ₹79/-</li>
-                        <li>Before Gym Salad | ₹69/-</li>
-                        <li>Sweet Honey Coleslaw | ₹79/-</li>
-                        <li>Cucumber Melon Feta Salad | ₹89/-</li>
+                        <li>Fruit Salad with Ice Cream </li>
+                        <li>Beet and Apple Salad </li>
+                        <li>Watermelon Green Peas & Lemon Leaf </li>
+                        <li>Before Gym Salad </li>
+                        <li>Sweet Honey Coleslaw </li>
+                        <li>Cucumber Melon Feta Salad </li>
                     </ul>
                 </div>
             </div>
@@ -255,18 +327,18 @@
                     <span class="close-button" onclick="togglePopup('starters-popup')">&times;</span>
                     <h3>Starters</h3>
                     <ul>
-                        <li>Bread Chilli | ₹39</li>
-                        <li>Honey Chilli Potato | ₹59</li>
-                        <li>Corn Salt and Pepper | ₹59</li>
-                        <li>Peri Peri Cheese Corn | ₹49</li>
-                        <li>Arancini Cheese Ball | ₹59</li>
-                        <li>French Fries | ₹59</li>
-                        <li>Empanda | ₹69</li>
-                        <li>Cabbage Surul | ₹59</li>
-                        <li>Peanut Masala | ₹49</li>
-                        <li>Stir Fry Cauliflower Yogurt Sauce | ₹49</li>
-                        <li>Peri Peri French Fries | ₹69</li>
-                        <li>Panneer Papad Delight | ₹59</li>                       
+                        <li>Bread Chilli </li>
+                        <li>Honey Chilli Potato </li>
+                        <li>Corn Salt and Pepper </li>
+                        <li>Peri Peri Cheese Corn </li>
+                        <li>Arancini Cheese Ball </li>
+                        <li>French Fries </li>
+                        <li>Empanda </li>
+                        <li>Cabbage Surul </li>
+                        <li>Peanut Masala </li>
+                        <li>Stir Fry Cauliflower Yogurt Sauce </li>
+                        <li>Peri Peri French Fries </li>
+                        <li>Panneer Papad Delight </li>                       
                     </ul>
                 </div>
             </div>
@@ -283,21 +355,21 @@
                     <span class="close-button" onclick="togglePopup('shawarma-popup', 8)">&times;</span>
                     <h3>Shawarmas</h3>
                     <ul>
-                        <li>Kupoos Mix Paneer Shawarma | ₹99/-</li>
-                        <li>Kurkure Mushroom Shawarma | ₹99/-</li>
-                        <li>Chipotle Arabic Mushroom Shawarma| ₹99/-</li>
-                        <li>Batman Chef Shawarma | ₹99/-</li>
-                        <li>Rocky Mexican Chipotle Paneer | ₹119/-</li>
-                        <li>Romeo Juliet Magalamp | ₹109/-</li>
-                        <li>BBQ Paneer Steak Shawarma | ₹119/-</li>
-                        <li>Gentle Man Mir Mayo Chicken Shawarma | ₹109/-</li>
-                        <li>KFC Murgh Malai Shawarma | ₹129/-</li>
-                        <li>Kuppos Chipotle Mir Chicken Shawarma | ₹109/-</li>
-                        <li>Kumban Cheese Jerk Shawarma | ₹119/-/li>
-                        <li>Cafun Spicy Mir Egg Wrap | ₹109/-</li>
-                        <li>Signature Smoked Chicken Shawarma | ₹129/-</li>
-                        <li>Beer Belt Fried Chicken Shawarma | ₹129/-</li>
-                        <li>CGV Chef Special Sauce Shawarma | ₹139/-</li>                        
+                        <li>Kupoos Mix Paneer Shawarma </li>
+                        <li>Kurkure Mushroom Shawarma </li>
+                        <li>Chipotle Arabic Mushroom Shawarma</li>
+                        <li>Batman Chef Shawarma </li>
+                        <li>Rocky Mexican Chipotle Paneer </li>
+                        <li>Romeo Juliet Magalamp </li>
+                        <li>BBQ Paneer Steak Shawarma </li>
+                        <li>Gentle Man Mir Mayo Chicken Shawarma </li>
+                        <li>KFC Murgh Malai Shawarma </li>
+                        <li>Kuppos Chipotle Mir Chicken Shawarma </li>
+                        <li>Kumban Cheese Jerk Shawarma <li>
+                        <li>Cafun Spicy Mir Egg Wrap </li>
+                        <li>Signature Smoked Chicken Shawarma </li>
+                        <li>Beer Belt Fried Chicken Shawarma </li>
+                        <li>CGV Chef Special Sauce Shawarma </li>                        
                     </ul>
                 </div>
             </div>
@@ -315,22 +387,22 @@
                     <span class="close-button" onclick="togglePopup('dosa-popup', 8)">&times;</span>
                     <h3>Dosa</h3>
                     <ul>
-                        <li>Ghee Podi Dosa | ₹79/-</li>
-                        <li>Masala Dosa | ₹79/-</li>
-                        <li>Mushroom Dosa | ₹89/-</li>
-                        <li>Cheese Dosa | ₹79/-</li>
-                        <li>Rocket Dosa | ₹99/-</li>
-                        <li>Chef Special Dosa | ₹89/-</li>
-                        <li>Fusion Dosa | ₹89/-</li>
-                        <li>Tomato Dosa | ₹69/-</li>
-                        <li>Hariyali Masala Dosa | ₹89/-</li>
-                        <li>Garlic Dosa | ₹79/-</li>
-                        <li>Mango Ginger Dosa | ₹89/-</li>
-                        <li>Kothu Kari Dosa | ₹199/-</li>
-                        <li>Chettinad Chicken Dosa | ₹109/-</li>
-                        <li>Egg Masala Dosa | ₹89/-</li>
-                        <li>Chicken Pizza Dosa | ₹99/-</li>
-                        <li>Capsicum Cheese Powder Dosa | ₹99/-</li>                                              
+                        <li>Ghee Podi Dosa </li>
+                        <li>Masala Dosa </li>
+                        <li>Mushroom Dosa </li>
+                        <li>Cheese Dosa </li>
+                        <li>Rocket Dosa </li>
+                        <li>Chef Special Dosa </li>
+                        <li>Fusion Dosa </li>
+                        <li>Tomato Dosa </li>
+                        <li>Hariyali Masala Dosa </li>
+                        <li>Garlic Dosa </li>
+                        <li>Mango Ginger Dosa </li>
+                        <li>Kothu Kari Dosa </li>
+                        <li>Chettinad Chicken Dosa</li>
+                        <li>Egg Masala Dosa </li>
+                        <li>Chicken Pizza Dosa </li>
+                        <li>Capsicum Cheese Powder Dosa </li>                                              
                     </ul>
                 </div>
             </div>
@@ -348,13 +420,13 @@
                     <span class="close-button" onclick="togglePopup('idly-popup', 8)">&times;</span>
                     <h3>Idly</h3>
                     <ul>
-                        <li>Ghee Podi Idly | ₹59/-</li>
-                        <li>Ghee Sambar Idly | ₹59/-</li>
-                        <li>Tadka Idly | ₹49/-</li>
-                        <li>Ghee Podi Thatte Idly | ₹59/-</li>
-                        <li>Ghee Sambar Thatte Idly | ₹59/-</li>
-                        <li>Spicy Masala Idly | ₹49/-</li>
-                        <li>Thatte Idly | ₹39/-</li>                                                                    
+                        <li>Ghee Podi Idly </li>
+                        <li>Ghee Sambar Idly </li>
+                        <li>Tadka Idly </li>
+                        <li>Ghee Podi Thatte Idly </li>
+                        <li>Ghee Sambar Thatte Idly </li>
+                        <li>Spicy Masala Idly </li>
+                        <li>Thatte Idly </li>                                                                    
                     </ul>
                 </div>
             </div>
@@ -372,19 +444,19 @@
                         <span class="close-button" onclick="togglePopup('norukkal-popup', 8)">&times;</span>
                         <h3>Norukkals</h3>
                         <ul>
-                            <li>Plain Set | ₹19/-</li>
-                            <li>Mango Ginger Set | ₹29/-</li>
-                            <li>Pickle Onion Set | ₹29/-</li>
-                            <li>Paneer Set | ₹39/-</li>
-                            <li>Egg Set | ₹39/-</li>
-                            <li>BBQ Chicken Set | ₹49/-</li>
-                            <li>Mayonnaise Set | ₹29/-</li>
-                            <li>Spicy Tuna Set | ₹39/-</li>
-                            <li>Plain Garam | ₹29/-</li>
-                            <li>Sweet and Spicy Garam | ₹39/-</li>
-                            <li>Egg Garam | ₹39/-</li>
-                            <li>Kadala Garam | ₹29/-</li>
-                            <li>Divine Chicken Garam | ₹49/-</li>                                                                                            
+                            <li>Plain Set </li>
+                            <li>Mango Ginger Set </li>
+                            <li>Pickle Onion Set </li>
+                            <li>Paneer Set </li>
+                            <li>Egg Set </li>
+                            <li>BBQ Chicken Set </li>
+                            <li>Mayonnaise Set </li>
+                            <li>Spicy Tuna Set </li>
+                            <li>Plain Garam </li>
+                            <li>Sweet and Spicy Garam </li>
+                            <li>Egg Garam </li>
+                            <li>Kadala Garam </li>
+                            <li>Divine Chicken Garam </li>                                                                                            
                         </ul>
                     </div>
                 </div>
@@ -402,20 +474,20 @@
                         <span class="close-button" onclick="togglePopup('waffles-popup', 8)">&times;</span>
                         <h3>Waffles</h3>
                         <ul>
-                            <li>Caramelized Banana Waffle | ₹59/-</li>
-                            <li>Custard Sugar Waffle | ₹49/-</li>
-                            <li>Dark Chocolate Almond Waffle | ₹69/-</li>
-                            <li>White Chocolate Strawberry Waffle | ₹69/-</li>
-                            <li>Mix Fruit Waffle | ₹59/-</li>
-                            <li>Double Chocolate Rainbow Waffle | ₹69/-</li>
-                            <li>Golden Sugar Waffle | ₹59/-</li>
-                            <li>Gulab Jamun Bun Butter Jam | ₹59/-</li>
-                            <li>Gulkand Golden Bun Butter | ₹49/-</li>
-                            <li>Kit Kat Chocolate Bun | ₹49/-</li>
-                            <li>Cheese Butter Bun | ₹49/-</li>
-                            <li>Rocket Waffle | ₹59/-</li>
-                            <li>Double Chocolate Rainbow Bun | ₹69/-</li>
-                            <li>Rabdi Bun Butter Jamun | ₹69/-</li>                                                             
+                            <li>Caramelized Banana Waffle</li>
+                            <li>Custard Sugar Waffle </li>
+                            <li>Dark Chocolate Almond Waffle </li>
+                            <li>White Chocolate Strawberry Waffle </li>
+                            <li>Mix Fruit Waffle </li>
+                            <li>Double Chocolate Rainbow Waffle </li>
+                            <li>Golden Sugar Waffle </li>
+                            <li>Gulab Jamun Bun Butter Jam </li>
+                            <li>Gulkand Golden Bun Butter </li>
+                            <li>Kit Kat Chocolate Bun </li>
+                            <li>Cheese Butter Bun </li>
+                            <li>Rocket Waffle </li>
+                            <li>Double Chocolate Rainbow Bun </li>
+                            <li>Rabdi Bun Butter Jamun </li>                                                             
                         </ul>
                     </div>
                 </div>
@@ -433,10 +505,10 @@
                     <span class="close-button" onclick="togglePopup('dimsum-popup', 8)">&times;</span>
                     <h3>Dim Sum</h3>
                     <ul>
-                        <li>Veg Dim Sum (Steam/Fry) | ₹59/-</li>
-                        <li>Egg Dim Sum (Steam/Fry) | ₹59/-</li>
-                        <li>Chicken Dim Sum (Steam/Fry) | ₹69/-</li>
-                        <li>Motu Sesame Peanut Dim Sum | ₹79/-</li>                                                                  
+                        <li>Veg Dim Sum (Steam) </li>
+                        <li>Egg Dim Sum (Steam) </li>
+                        <li>Chicken Dim Sum (Steam) </li>
+                        <li>Motu Sesame Peanut Dim Sum </li>                                                                  
                     </ul>
                 </div>
             </div>
@@ -454,16 +526,16 @@
                     <span class="close-button" onclick="togglePopup('lassi-popup', 8)">&times;</span>
                     <h3>Lassi</h3>
                     <ul>
-                        <li>Sweet Lassi | ₹29/-</li>
-                        <li>Sweet & Salt Lassi | ₹29/-</li>
-                        <li>Mango Lassi | ₹39/-</li>
-                        <li>Banana Lassi | ₹49/-</li>
-                        <li>Mixfruit Lassi | ₹59/-</li>
-                        <li>Strawberry Lassi | ₹39/-</li>
-                        <li>Green Paneer Lassi | ₹49/-</li>
-                        <li>Mint & Ginger Lassi | ₹39/-</li>
-                        <li>Basic & Mint Lassi | ₹39/-</li>
-                        <li>Orange Lassi | ₹39/-</li>                                                                   
+                        <li>Sweet Lassi </li>
+                        <li>Sweet & Salt Lassi </li>
+                        <li>Mango Lassi </li>
+                        <li>Banana Lassi </li>
+                        <li>Mixfruit Lassi </li>
+                        <li>Strawberry Lassi </li>
+                        <li>Green Paneer Lassi </li>
+                        <li>Mint & Ginger Lassi </li>
+                        <li>Basic & Mint Lassi </li>
+                        <li>Orange Lassi </li>                                                                   
                     </ul>
                 </div>
             </div>
@@ -481,12 +553,12 @@
                     <span class="close-button" onclick="togglePopup('mojito-popup', 8)">&times;</span>
                     <h3>Mojito</h3>
                     <ul>
-                        <li>Blue and Mint Mojito | ₹69/-</li>
-                        <li>Blue Berry Mojito | ₹79/-</li>
-                        <li>Guava Mojito | ₹69/-</li>
-                        <li>Cocojito Mojito | ₹79/-</li>
-                        <li>Grilled Pineapple Mojito | ₹69/-</li>
-                        <li>Watermelon and Mint Mojito | ₹69/-</li>                                                                  
+                        <li>Blue and Mint Mojito </li>
+                        <li>Blue Berry Mojito </li>
+                        <li>Guava Mojito </li>
+                        <li>Cocojito Mojito </li>
+                        <li>Grilled Pineapple Mojito </li>
+                        <li>Watermelon and Mint Mojito </li>                                                                  
                     </ul>
                 </div>
             </div>
@@ -504,15 +576,15 @@
                     <span class="close-button" onclick="togglePopup('milkshakes-popup', 8)">&times;</span>
                     <h3>Fruit Milkshakes</h3>
                     <ul>
-                        <li>Apple and Oreo Milkshake | ₹79/-</li>
-                        <li>Kit Kat and Banana Milkshake | ₹79/-</li>
-                        <li>Fig and Dates Shake | ₹89/-</li>
-                        <li>Strawberry Rose Shake | ₹79/-</li>
-                        <li>Summer Special Mango Shake | ₹79/-</li>
-                        <li>Popeye Dry Fruit Makhana Shake | ₹89/-</li>
-                        <li>Boost and Papaya Shake | ₹69/-</li>
-                        <li>Dragon Fruits Golden Sugar Shake | ₹79/-</li>
-                        <li>Avocado Red Banana Shake | ₹89/-</li>                                                                  
+                        <li>Apple and Oreo Milkshake </li>
+                        <li>Kit Kat and Banana Milkshake </li>
+                        <li>Fig and Dates Shake </li>
+                        <li>Strawberry Rose Shake </li>
+                        <li>Summer Special Mango Shake </li>
+                        <li>Popeye Dry Fruit Makhana Shake </li>
+                        <li>Boost and Papaya Shake </li>
+                        <li>Dragon Fruits Golden Sugar Shake </li>
+                        <li>Avocado Red Banana Shake </li>                                                                  
                     </ul>
                 </div>
             </div>
@@ -530,17 +602,17 @@
                     <span class="close-button" onclick="togglePopup('juice-popup', 8)">&times;</span>
                     <h3>Juice</h3>
                     <ul>
-                        <li>Watermelon Juice | ₹39/-</li>
-                        <li>Honey Melon Juice | ₹39/-</li>
-                        <li>Musky Melon Juice | ₹49/-</li>
-                        <li>Sweet Lime Juice | ₹39/-</li>
-                        <li>Green Iceland Juice | ₹49/-</li>
-                        <li>Lime Juice | ₹39/-</li>
-                        <li>Orange Juice | ₹59/-</li>
-                        <li>Powder Booster Juice | ₹59/-</li>
-                        <li>Summer Dream Juice | ₹59/-</li>
-                        <li>Apple Juice | ₹49/-</li>
-                        <li>Pineapple Juice | ₹49/-</li>                                                                   
+                        <li>Watermelon Juice </li>
+                        <li>Honey Melon Juice </li>
+                        <li>Musky Melon Juice </li>
+                        <li>Sweet Lime Juice </li>
+                        <li>Green Iceland Juice </li>
+                        <li>Lime Juice </li>
+                        <li>Orange Juice </li>
+                        <li>Powder Booster Juice </li>
+                        <li>Summer Dream Juice </li>
+                        <li>Apple Juice </li>
+                        <li>Pineapple Juice </li>                                                                   
                     </ul>
                 </div>
             </div>
@@ -558,15 +630,15 @@
                         <span class="close-button" onclick="togglePopup('deserts-popup', 8)">&times;</span>
                         <h3>Deserts</h3>
                         <ul>
-                            <li>Gajar Ka Halwa | ₹49/-</li>
-                            <li>Beetroot Halwa | ₹49/-</li>
-                            <li>Millet Kheer | ₹39/-</li>
-                            <li>Ghewar | ₹69/-</li>
-                            <li>Gulab Jamun | ₹39/-</li>
-                            <li>Tres Leches Milk Cake | ₹59/-</li>
-                            <li>Kunafa | ₹69/-</li>
-                            <li>Gulab Jamun & Ice Cream | ₹49/-</li>
-                            <li>Tender Coconut Payasam | ₹69/-</li>                                                                
+                            <li>Gajar Ka Halwa </li>
+                            <li>Beetroot Halwa </li>
+                            <li>Millet Kheer </li>
+                            <li>Ghewar </li>
+                            <li>Gulab Jamun </li>
+                            <li>Tres Leches Milk Cake </li>
+                            <li>Kunafa </li>
+                            <li>Gulab Jamun & Ice Cream </li>
+                            <li>Tender Coconut Payasam </li>                                                                
                         </ul>
                     </div>
                 </div>
@@ -584,11 +656,11 @@
                     <span class="close-button" onclick="togglePopup('icecream-popup', 8)">&times;</span>
                     <h3>Ice Creams</h3>
                     <ul>
-                        <li>Vanilla Ice Cream | ₹49/-</li>
-                        <li>Chocolate Ice Cream | ₹59/-</li>
-                        <li>Strawberry Ice Cream | ₹59/-</li>
-                        <li>Chocobar Ice Cream | ₹69/-</li>
-                        <li>Mango Ice Cream | ₹49/-</li>                                                                                          
+                        <li>Vanilla Ice Cream </li>
+                        <li>Chocolate Ice Cream </li>
+                        <li>Strawberry Ice Cream </li>
+                        <li>Chocobar Ice Cream </li>
+                        <li>Mango Ice Cream </li>                                                                                          
                     </ul>
                 </div>
             </div>
